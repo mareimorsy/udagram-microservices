@@ -1,0 +1,18 @@
+version: "3"
+services:
+  reverseproxy:
+    build:
+      context: .
+    image: mareimorsy/udagram-nginx
+  backend_user:
+    build:
+      context: ../../udacity-c3-restapi-user
+    image: mareimorsy/udagram-api-user
+  backend_feed:
+    build:
+      context: ../../udacity-c3-restapi-feed  
+    image: mareimorsy/udagram-api-feed
+  frontend:
+    build:
+      context: ../../udacity-c3-frontend  
+    image: mareimorsy/udagram-frontend

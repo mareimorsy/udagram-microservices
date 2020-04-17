@@ -1,0 +1,34 @@
+language: minimal
+
+services: docker
+
+env:
+  - DOCKER_COMPOSE_VERSION=1.23.2
+
+before_install:
+  - docker -v && docker-compose -v
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
+  - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+  - chmod +x ./kubectl
+  - sudo mv ./kubectl /usr/local/bin/kubectl
+
+
+
+install:
+  - docker-compose -f udacity-c3-deployment/docker/docker-compose-build.yaml build --parallel
+  - docker login --username=mareimorsy --password=${DOCKER_PASSWORD}
+  - docker push mareimorsy/udagram-api-user
+  - docker push mareimorsy/udagram-api-feed
+  - docker push mareimorsy/udagram-api-frontend
+  - docker push mareimorsy/udagram-nginx
+  - kubectl config set-credentials ${KUBE_CLUSTER_NAME} --username=${KUBE_USER_NAME} --password=${KUBE_PASSWORD}
+  - kubectl config set-cluster ${KUBE_CLUSTER_NAME} --server=${KUBE_SERVER} --insecure-skip-tls-verify=true
+  - kubectl config set-context ${KUBE_CLUSTER_NAME} --cluster=${KUBE_CLUSTER_NAME} --user=${KUBE_CLUSTER_NAME} --namespace=default
+  - kubectl config use-context ${KUBE_CLUSTER_NAME}
+  - kubectl delete pod -l service=backend-user -n default
+  - kubectl delete pod -l service=backend-feed -n default
+  - kubectl delete pod -l service=frontend -n default
+  - kubectl delete pod -l service=reverseproxy -n default
