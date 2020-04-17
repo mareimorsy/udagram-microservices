@@ -1,27 +1,35 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
     service: backend-user
   name: backend-user
 spec:
-  replicas: 2
+  replicas: 1
+  selector:
+    matchLabels:
+      service: backend-user
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
   template:
     metadata:
       labels:
         service: backend-user
     spec:
       containers:
-      - image: scheele/udacity-restapi-user
+      - image: mareimorsy/udagram-api-user
         name: backend-user 
         imagePullPolicy: Always  
         resources:
           requests:
-            memory: "64Mi"
-            cpu: "250m"
+            memory: "256Mi"
+            cpu: "100m"
           limits:
-            memory: "1024Mi"
-            cpu: "500m"      
+            memory: "256Mi"
+            cpu: "200m"      
         env:
         - name: URL
           valueFrom:

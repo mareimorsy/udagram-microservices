@@ -12,6 +12,10 @@ services:
     build:
       context: ../../udacity-c3-restapi-feed  
     image: mareimorsy/udagram-api-feed
+  backend_feed_v0_1:
+    build:
+      context: ../../udacity-c3-restapi-feed-v0-1
+    image: mareimorsy/udagram-api-feed:v0.1
   frontend:
     build:
       context: ../../udacity-c3-frontend  

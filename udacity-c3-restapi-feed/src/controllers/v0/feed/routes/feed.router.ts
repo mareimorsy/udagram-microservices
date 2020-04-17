@@ -39,6 +39,12 @@ router.get('/', async (req: Request, res: Response) => {
     res.send(items);
 });
 
+// Get version resource
+router.get('/version', 
+    async (req: Request, res: Response) => {
+    res.send('Welcome to feed service v0.0');
+});
+
 // Get a specific resource
 router.get('/:id', 
     async (req: Request, res: Response) => {

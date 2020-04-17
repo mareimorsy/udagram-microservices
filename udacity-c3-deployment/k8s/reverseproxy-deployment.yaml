@@ -1,27 +1,35 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
     service: reverseproxy
   name: reverseproxy
 spec:
-  replicas: 2
+  replicas: 1
+  selector:
+    matchLabels:
+      service: reverseproxy
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
   template:
     metadata:
       labels:
         service: reverseproxy
     spec:
       containers:
-      - image: scheele/reverseproxy
+      - image: mareimorsy/udagram-nginx
         name: reverseproxy
         imagePullPolicy: Always          
         resources:
           requests:
             memory: "64Mi"
-            cpu: "250m"
+            cpu: "50m"
           limits:
-            memory: "1024Mi"
-            cpu: "500m"       
+            memory: "128Mi"
+            cpu: "200m"       
         ports:
         - containerPort: 8080
       restartPolicy: Always

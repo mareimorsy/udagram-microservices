@@ -1,11 +1,19 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
     service: frontend
   name: frontend
 spec:
-  replicas: 2
+  replicas: 1
+  selector:
+    matchLabels:
+      service: frontend
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -13,17 +21,17 @@ spec:
         api: external        
     spec:
       containers:
-      - image: scheele/udacity-frontend:local
+      - image: mareimorsy/udagram-frontend
         name: frontend
         imagePullPolicy: Always          
         ports:
         - containerPort: 80
         resources:
           requests:
-            memory: "64Mi"
-            cpu: "250m"
+            memory: "128Mi"
+            cpu: "100m"
           limits:
-            memory: "1024Mi"
-            cpu: "500m"                
+            memory: "128Mi"
+            cpu: "200m"                
       restartPolicy: Always
 

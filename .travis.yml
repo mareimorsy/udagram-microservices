@@ -22,7 +22,8 @@ install:
   - docker login --username=mareimorsy --password=${DOCKER_PASSWORD}
   - docker push mareimorsy/udagram-api-user
   - docker push mareimorsy/udagram-api-feed
-  - docker push mareimorsy/udagram-api-frontend
+  - docker push mareimorsy/udagram-api-feed:v0.1
+  - docker push mareimorsy/udagram-frontend
   - docker push mareimorsy/udagram-nginx
   - kubectl config set-credentials ${KUBE_CLUSTER_NAME} --username=${KUBE_USER_NAME} --password=${KUBE_PASSWORD}
   - kubectl config set-cluster ${KUBE_CLUSTER_NAME} --server=${KUBE_SERVER} --insecure-skip-tls-verify=true
